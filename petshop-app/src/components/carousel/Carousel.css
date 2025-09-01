@@ -1,0 +1,56 @@
+/*componente pai*/
+.carousel-section {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.carousel-header {
+    /*Display - deixa o titulo e a seta na mesma linha*/
+    display: flex;
+    /*Alinha no centro os elementos da linha*/
+    align-items: center;
+    /*deixar as setas do lado direito da tela*/
+    justify-content: space-between;
+}
+
+.nav-btn {
+    background: black;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; 
+}
+
+.nav-icon {
+    /*cor da seta*/
+    stroke: white;
+}
+
+.carousel-nav {
+    /*Espaçamento entre as setas*/
+    /*usar novamente o display flex para dar espaçamento usando gap.*/
+    display: flex;
+    gap: 20px;
+}
+
+/*card individual"*/
+.card {
+    min-width: 300px;
+    min-height: 300px;
+    background-color: brown;
+    border: 2px solid;
+}
+
+/*Bloco de cards*/
+.cards-container {
+    display: flex;
+    gap: 50px;
+    justify-content: space-between;
+    /*Uma parte da página que a gente consegue fazer o scroll*/
+    overflow-x: scroll;
+}
+
+/*esconder a barrinha de scroll*/
+.cards-container::-webkit-scrollbar {
+    display: none;
+}
