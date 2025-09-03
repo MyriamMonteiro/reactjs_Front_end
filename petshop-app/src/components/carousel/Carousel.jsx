@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight } from "akar-icons"
 import { useRef } from 'react';
 
 
-const Carousel = ({ title }) => {
+const Carousel = ({ title, items, RenderComponent }) => {
     /* Criar uma varável para chamar o useRef*/
     const carouselRef = useRef(null)
     const scrollLeft = () => {
@@ -49,10 +49,9 @@ const Carousel = ({ title }) => {
         
             {/*container para os cards do carrossel*/}
             <div className='cards-container' ref={carouselRef}>
-                <div className='card'></div>
-                <div className='card'></div>
-                <div className='card'></div>
-                <div className='card'></div>
+                {items.map((item, index) => 
+                    <RenderComponent key={index} item={item}/>
+                )}
             </div>
         </section>
         
