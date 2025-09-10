@@ -1,9 +1,11 @@
 /*useState redenriza o componente caso o estado, valor mude. Analisa e atualiza somente o que foi selecionado*/
 /*useState sempre terá uma Variável e um retorno */
 
-import './ShopSidebar.css'
-import Slider from 'rc-slider';
+//IMPORTANTE ordem dos import alteram o resultado. Precisa ter uma ordem certa
 import { useState } from 'react';
+import Slider from 'rc-slider';
+import './ShopSidebar.css';
+import "rc-slider/assets/index.css";
 
 const ShopSidebar = ({ listaDeCategorias, listaDeMarcas }) => {
     const [priceRange, setPriceRange] = useState ([0, 500])
@@ -45,7 +47,16 @@ const aplicarFiltroPreco = () => {
                         max={500}
                         defaultValue={priceRange}
                         onChange={(newRange) => (setPriceRange(newRange))}
-                        />
+                
+                        //aplicando o style no componente
+                        styles={{
+                            track: { backgroundColor: 'orange' },
+                            rail: { backgroundColor: '#ddd' },
+                            handle: {
+                                borderColor: 'orange',
+                                backgroundColor: 'white',
+                            },
+                        }} />
 
                         <div className='price-info'>
                             <span>

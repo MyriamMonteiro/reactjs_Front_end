@@ -2,6 +2,7 @@
 import './Navbar.css';
 import { Search, Heart, Cart } from 'akar-icons'
 import Logo from '../../assets/Logo.svg'
+import { Link } from 'react-router-dom';
 
 /*criar uma arrow fuction*/
 const Navbar = () => {
@@ -13,7 +14,7 @@ const Navbar = () => {
                 </a>
                 {/*Menu*/}
                 <ul className='nav-links'>
-                    <li>Início</li>
+                    <li><Link to='/'>Início</Link></li>
                     <li>Comprar</li>
                     <li>Sobre Nós</li>
                     <li>Contato</li>

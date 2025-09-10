@@ -9,6 +9,16 @@ const lista = [
         productCount:64,
         image:"https://site.petesperanca.com.br/wp-content/uploads/2023/10/Variedade_Produto.jpeg",
      },
+     { 
+        title: "Acessórios", 
+        productCount:64,
+        image:"https://site.petesperanca.com.br/wp-content/uploads/2023/10/Variedade_Produto.jpeg",
+     },
+     { 
+        title: "Acessórios", 
+        productCount:64,
+        image:"https://site.petesperanca.com.br/wp-content/uploads/2023/10/Variedade_Produto.jpeg",
+     },
      {
         title: "Comida",
         productCount: 30,

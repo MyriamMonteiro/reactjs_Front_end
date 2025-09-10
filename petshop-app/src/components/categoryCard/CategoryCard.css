@@ -1,6 +1,6 @@
 .category-card {
     border-radius: 12px;
-    width: 200px;
+    min-width: 200px;
     height: 350px;
     margin: 10px;
     /*background-color: aquamarine;*/

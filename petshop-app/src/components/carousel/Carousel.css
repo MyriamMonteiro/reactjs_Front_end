@@ -11,6 +11,7 @@
     align-items: center;
     /*deixar as setas do lado direito da tela*/
     justify-content: space-between;
+    margin: 50px;
 }
 
 .nav-btn {

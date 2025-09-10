@@ -58,3 +58,17 @@
     background: #333;
     color: #F8F9FA;
 }
+
+@media (max-width: 576px) {
+    .hero {
+        padding: 40px 20px 0;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+}
