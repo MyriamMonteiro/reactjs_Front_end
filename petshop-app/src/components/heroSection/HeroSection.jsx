@@ -1,3 +1,4 @@
+// Hero é o cabeçalho do site - banner principal
 /*criar uma função*/
 import heroImg from '../../assets/heroImg.svg'
 import './HeroSection.css'

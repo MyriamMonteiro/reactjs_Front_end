@@ -1,3 +1,4 @@
+// criar a estrutura carrossel sem os cards - pesquise por categoria
 /* Criar componente*/
 /* Propriedade {title}*/
 import './Carousel.css';
@@ -6,8 +7,9 @@ import { useRef } from 'react';
 
 
 const Carousel = ({ title, items, RenderComponent }) => {
-    /* Criar uma varável para chamar o useRef*/
+    /* Criar uma varável para chamar o useRef - visualizar somente o que está sendo renderizado na tela*/
     const carouselRef = useRef(null)
+
     const scrollLeft = () => {
         /*para redenrizar os proximos cards no carrosel*/
         if (carouselRef.current) {
@@ -49,6 +51,7 @@ const Carousel = ({ title, items, RenderComponent }) => {
         
             {/*container para os cards do carrossel*/}
             <div className='cards-container' ref={carouselRef}>
+                {/* mapear os itens da lista - a lista está no componentes AnimalCarousel*/}
                 {items.map((item, index) => 
                     <RenderComponent key={index} item={item}/>
                 )}

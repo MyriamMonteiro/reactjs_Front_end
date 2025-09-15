@@ -1,41 +1,11 @@
-import { useState } from 'react';
+// chamamos a shopSidebar
+
+import { useEffect, useState } from 'react';
 import ProductCard from '../productCard/ProductCard';
 import ShopSidebar from '../shopSidebar/ShopSidebar';
 import './ProductGrid.css';
 import Pagination from '../pagination/Pagination';
-
-const todosProdutos = [
-  { id: 1, name: "Camiseta", price: 29.99 },
-  { id: 2, name: "Calça Jeans", price: 79.99 },
-  { id: 3, name: "Tênis", price: 120.00 },
-  { id: 4, name: "Boné", price: 19.99 },
-  { id: 5, name: "Mochila", price: 150.50 },
-  { id: 6, name: "Relógio", price: 250.00 },
-  { id: 7, name: "Óculos de Sol", price: 180.75 },
-  { id: 8, name: "Jaqueta", price: 300.00 },
-  { id: 9, name: "Meias", price: 12.50 },
-  { id: 10, name: "Tênis de Corrida", price: 130.00 },
-  { id: 11, name: "Camisa Social", price: 45.00 },
-  { id: 12, name: "Cinto", price: 35.00 },
-  { id: 13, name: "Carteira", price: 60.00 },
-  { id: 14, name: "Luvas", price: 25.00 },
-  { id: 15, name: "Gorro", price: 20.00 },
-  { id: 16, name: "Blusa de Frio", price: 100.00 },
-  { id: 17, name: "Shorts", price: 40.00 },
-  { id: 18, name: "Chinelo", price: 15.00 },
-  { id: 19, name: "Sandália", price: 50.00 },
-  { id: 20, name: "Bolsa", price: 200.00 },
-  { id: 21, name: "Pulseira", price: 45.50 },
-  { id: 22, name: "Brinco", price: 60.00 },
-  { id: 23, name: "Colar", price: 80.00 },
-  { id: 24, name: "Camiseta Regata", price: 25.00 },
-  { id: 25, name: "Calça Legging", price: 70.00 },
-  { id: 26, name: "Jaqueta Corta Vento", price: 150.00 },
-  { id: 27, name: "Moletom", price: 90.00 },
-  { id: 28, name: "Tênis Casual", price: 110.00 },
-  { id: 29, name: "Relógio Digital", price: 300.00 },
-  { id: 30, name: "Carteira Masculina", price: 55.00 }
-];
+import axios from 'axios';
 
 const listaDeCategorias = [
     { nome: "Brinquedos", qtd: 32 },
@@ -52,17 +22,100 @@ const listaDeMarcas = [
 const ProductGrid = () => {
     // chamamos useState para atualizar o estado da tela
     const [paginaAtual, setPaginaAtual] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [pets, setPets] = useState([]);
+    const [totalDePaginas, setTotalDePaginas] = useState(1);
+    const maximoDeAnimais = 50;
     //variavel de quantos produtos mostrar na tela. Nesse caso é 6
     const produtosPorPagina = 6;
-    //ceil serva para arredondar para cima
+
+    /* Para puxar a chave acessamos petfinder.com/developers. 
+    Para subir para o github, precisará apgar a chave */
+    
+    //const API_KEY = "BYETXGKSchIwAjmG6x5DRTnsoQHpirdfxNu2Wxo8p8sr1Tklph";
+    //const API_SECRET = "oFeRSXdCIjSIwwXrNF4ctu2xWm4okGbxt8ZmJS4f";
+
+    const API_KEY = "Axm8E8sDRGhlB5Cs8oIP1kAXHloES3rXeu9LSBJmb98S9Fl3zC";
+    const API_SECRET = "s5WnxXNllYXzByJti1QH6VgbNDdX5DEyRcJT9R11";
+
+    // obter o Token de acesso de acordo com a documentação do Petfinder
+    // função acincrona - é uma função que executa em segundo plano - chamar async e await
+    const obterToken = async () => {
+        const response = await axios.post(
+            "https://api.petfinder.com/v2/oauth2/token",
+            `grant_type=client_credentials&client_id=${API_KEY}&client_secret=${API_SECRET}`,
+            {
+                //headers faz a leitura da url acima "grant_type=client..."
+                headers: {"Content-Type": "application/x-www-form-urlencoded"}
+            }
+        );
+        return response.data.access_token;
+    }
+
+    const buscarPets = async (token, pagina, limite) => {
+        const response = await axios.get(
+            `/pf-api/animals?page=${pagina}&limite=${limite}&type=Dog`,
+            {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+        );
+
+        return response.data;
+    }
+    
+    // CHAMADA DE API
+    useEffect(() => {
+        const fetchTokenEPets = async () => {
+            if (loading) return;
+            setLoading(true);
+        
+
+            try {
+                const meuToken = await obterToken();
+                const data = await buscarPets(meuToken, paginaAtual, produtosPorPagina);
+                
+                //filtro para API, para que cada animal retorne somente se tiver foto
+                const petsComImagem = data.animals.filter(
+                    (pet) => pet.primary_photo_cropped || (pet.photos && pet.photos.length > 0)
+                );
+
+                const petsFormatados = petsComImagem.map((cachorro) => ({
+                   id: cachorro.id,
+                   name: cachorro.name,  
+                   price: cachorro.breeds.primary,
+                   image: cachorro.primary_photo_cropped?.medium || (cachorro.photos && photos[0]?.medium)
+                }));
+
+                setPets(petsFormatados);
+
+                // Limitar a API para não vir todas as informações
+                const totalConsiderado = Math.min(
+                    maximoDeAnimais,
+                    data.pagination.total_count
+                );
+
+                setTotalDePaginas(Math.ceil(totalConsiderado / produtosPorPagina));
+                
+                // tratamento de erro
+            } catch (error) {
+                console.error("Erro ao buscar os dados da PetFinder API:", error)
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchTokenEPets();
+    }, [paginaAtual]);
+
+    //ceil serve para arredondar para cima
     // todosProdutos.length é o comprimento da lista de produtos
-    const totalDePaginas = Math.ceil(todosProdutos.length / produtosPorPagina)
+    // const totalDePaginas = Math.ceil(todosProdutos.length / produtosPorPagina)
 
     //indiceUltimoProduto é o resultado do ultimo produto da página + os novos da página, ex: 1pág: 12 prod. / 2pag: 12 + os prox 12.
-    const indiceUltimoProduto = paginaAtual * produtosPorPagina;
-    const indicePrimeiroProduto = indiceUltimoProduto - produtosPorPagina; 
+    // const indiceUltimoProduto = paginaAtual * produtosPorPagina;
+    // const indicePrimeiroProduto = indiceUltimoProduto - produtosPorPagina; 
     //slice é fatiar a quantidade de produtos mostrada na página
-    const produtosAtuais = todosProdutos.slice(indicePrimeiroProduto, indiceUltimoProduto);
+    // const produtosAtuais = todosProdutos.slice(indicePrimeiroProduto, indiceUltimoProduto);
 
     const mudarPaginaAtual = (numeroDaPagina) => {
         setPaginaAtual(numeroDaPagina)
@@ -73,9 +126,7 @@ const ProductGrid = () => {
             <ShopSidebar listaDeCategorias={listaDeCategorias} listaDeMarcas={listaDeMarcas}/>
             <main className='product-list-section'>
                 <header className='product-list-header'>
-                    <p>Mostrando {indicePrimeiroProduto + 1} até 
-                        {Math.min( indicePrimeiroProduto, todosProdutos.length )} de  
-                        {todosProdutos.length} resultados </p>
+                    <p>Mostrando {pets.length} resultados</p>
                     
                     <div className='sort-by'>
                         <label htmlFor="sort">Ordenar por: </label>
@@ -89,8 +140,8 @@ const ProductGrid = () => {
                 </header>
 
                 <div className='products-grid'>
-                    {produtosAtuais.map(produto => (
-                        <ProductCard key={produto.id} product={produto}/>
+                    {pets.map(dog => (
+                        <ProductCard key={dog.id} product={dog}/>
                     ))} 
                 </div>
 

@@ -1,3 +1,4 @@
+// cria o card especifico, adiciona imagem e nome
 import './AnimalCard.css';
 
 const AnimalCard = ({ animal }) => {
